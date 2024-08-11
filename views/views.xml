@@ -1,0 +1,270 @@
+<odoo>
+
+
+<!-- New Views and Actions for Stock Category -->
+
+    <!-- Form view for Stock Category -->
+    <record id="view_stock_category_form" model="ir.ui.view">
+        <field name="name">stock.category.form</field>
+        <field name="model">inventory.stock.category</field>
+        <field name="arch" type="xml">
+            <form string="Stock Category">
+                <group>
+                    <field name="name"/>
+                    <field name="description"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view for Stock Category -->
+    <record id="view_stock_category_tree" model="ir.ui.view">
+        <field name="name">stock.category.tree</field>
+        <field name="model">inventory.stock.category</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Categories">
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action to open views for Stock Category -->
+    <record id="action_stock_category" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="res_model">inventory.stock.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item for Stock Category -->
+    <menuitem id="menu_inventory_stock_category"
+              name="Categories"
+              parent="menu_inventory_root"
+              action="action_stock_category"
+              sequence="3"/>
+
+
+    <!-- Form View for stock supplier-->
+<record id="view_stock_supplier_form" model="ir.ui.view">
+    <field name="name">stock.supplier.form</field>
+    <field name="model">inventory.stock.supplier</field>
+    <field name="arch" type="xml">
+        <form string="Supplier">
+            <group>
+                <field name="name"/>
+                <field name="contact_name"/>
+                <field name="contact_email"/>
+                <field name="contact_phone"/>
+                <field name="address"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<!-- Tree View -->
+<record id="view_stock_supplier_tree" model="ir.ui.view">
+    <field name="name">stock.supplier.tree</field>
+    <field name="model">inventory.stock.supplier</field>
+    <field name="arch" type="xml">
+        <tree string="Suppliers">
+            <field name="name"/>
+            <field name="contact_name"/>
+            <field name="contact_email"/>
+            <field name="contact_phone"/>
+        </tree>
+    </field>
+</record>
+
+<!-- Action to open views -->
+<record id="action_stock_supplier" model="ir.actions.act_window">
+    <field name="name">Fournisseurs</field>
+    <field name="res_model">inventory.stock.supplier</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<!-- Menu item -->
+<menuitem id="menu_inventory_stock_supplier"
+          name="Fournisseurs"
+          parent="menu_inventory_root"
+          action="action_stock_supplier"
+          sequence="4"/>
+<!-- Form View for item -->
+<record id="view_stock_item_form" model="ir.ui.view">
+    <field name="name">stock.item.form</field>
+    <field name="model">inventory.stock.item</field>
+    <field name="arch" type="xml">
+        <form string="Stock Item">
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="quantity_available"/>
+                    <field name="supplier_id"/>
+                    <field name="market_number"/>
+                </group>
+                <group>
+                    <field name="description"/>
+                    <field name="year"/>
+                    <field name="location"/>
+                    <field name="qr_code_image" widget='image'/>
+                    <field name="qr_code_pdf_file" widget="download"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<!-- Tree View for item -->
+<record id="view_stock_item_tree" model="ir.ui.view">
+    <field name="name">stock.item.tree</field>
+    <field name="model">inventory.stock.item</field>
+    <field name="arch" type="xml">
+        <tree string="Stock Items">
+            <field name="name"/>
+            <field name="category_id"/>
+            <field name="quantity_available"/>
+            <field name="supplier_id"/>
+        </tree>
+    </field>
+</record>
+
+<!-- Kanban View for item -->
+<record id="view_stock_item_kanban" model="ir.ui.view">
+    <field name="name">stock.item.kanban</field>
+    <field name="model">inventory.stock.item</field>
+    <field name="arch" type="xml">
+        <kanban string="Stock Items">
+            <field name="name"/>
+            <field name="category_id"/>
+            <field name="quantity_available"/>
+            <field name="supplier_id"/>
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="oe_kanban_details">
+                            <strong>
+                                <field name="name"/>
+                            </strong>
+                            <div class="oe_kanban_body">
+                                <p>Quantité : <field name="quantity_available"/></p>
+                                <p>Catégorie : <field name="category_id" options="{'no_open': True}"/></p>
+                                <p>Fournisseur : <field name="supplier_id" options="{'no_open': True}"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+<!-- Graph View for item -->
+<record id="view_stock_item_graph" model="ir.ui.view">
+    <field name="name">stock.item.graph</field>
+    <field name="model">inventory.stock.item</field>
+    <field name="arch" type="xml">
+        <graph string="Analyse" type="bar">
+            <field name="quantity_available" type="measure"/>
+            <field name="category_id" type="row"/>
+            <field name="year" type="col"/>
+        </graph>
+    </field>
+</record>
+
+<record id="action_stock_item_graph" model="ir.actions.act_window">
+    <field name="name">Analyse</field>
+    <field name="res_model">inventory.stock.item</field>
+    <field name="view_mode">graph</field>
+    <field name="view_id" ref="view_stock_item_graph"/>
+</record>
+
+<menuitem id="menu_stock_item_graph"
+          name="Analyse"
+          parent="menu_inventory_root"
+          action="action_stock_item_graph"
+          sequence="6"/>
+
+<template id="report_item">
+    <t t-call="web.external_layout">
+        <div class="page">
+            <h2>Item Information</h2>
+            <p>Name: <t t-esc="object.name"/></p>
+            <p>Year: <t t-esc="object.year"/></p>
+            <p>Market Number: <t t-esc="object.market_number"/></p>
+            <p>Location: <t t-esc="object.location"/></p>
+            <img t-att-src="'data:image/png;base64,' + object.qr_code" />
+        </div>
+    </t>
+</template>
+
+<!-- Actions -->
+<record id="action_stock_item" model="ir.actions.act_window">
+    <field name="name">Articles</field>
+    <field name="res_model">inventory.stock.item</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="view_id" ref="view_stock_item_kanban"/>
+</record>
+
+<!-- Menu item -->
+<menuitem id="menu_stock_item"
+          name="Articles"
+          parent="menu_inventory_root"
+          action="action_stock_item"
+          sequence="2"/>
+
+<!-- Form View for movement -->
+<record id="view_stock_movement_form" model="ir.ui.view">
+    <field name="name">stock.movement.form</field>
+    <field name="model">inventory.stock.movement</field>
+    <field name="arch" type="xml">
+        <form string="Transactions">
+            <sheet>
+                <group>
+                    <field name="item_id"/>
+                    <field name="movement_date"/>
+                    <field name="movement_type"/>
+                    <field name="quantity"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+
+
+<!-- Tree View for movement -->
+<record id="view_stock_movement_tree" model="ir.ui.view">
+    <field name="name">stock.movement.tree</field>
+    <field name="model">inventory.stock.movement</field>
+    <field name="arch" type="xml">
+        <tree string="Transactions">
+            <field name="item_id"/>
+            <field name="movement_date"/>
+            <field name="movement_type"/>
+            <field name="quantity"/>
+        </tree>
+    </field>
+</record>
+
+
+<!-- Actions for movement -->
+<record id="action_stock_movement" model="ir.actions.act_window">
+    <field name="name">Transactions</field>
+    <field name="res_model">inventory.stock.movement</field>
+    <field name="view_mode">tree,form</field>
+    <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+            Create your first stock movement
+        </p>
+    </field>
+</record>
+
+
+<!-- Menu item -->
+<menuitem id="menu_stock_movement"
+          name="Transactions"
+          parent="menu_inventory_root"
+          action="action_stock_movement"
+          sequence="5"/>
+
+</odoo>
